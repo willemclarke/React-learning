@@ -13,11 +13,12 @@ class todoList extends Component {
     this.addItem = this.addItem.bind(this);
     this.onChange = this.onChange.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+    this.editItem = this.editItem.bind(this);
   }
 
   onChange(event) {
     this.setState({
-      /*event is a type - reasons for color all being blue - js doesnt recognise types*/
+      /*event is a type - reasons for color all being blue - js doesnt recognise event types*/
       currentValue: event.target.value
     });
   }
@@ -26,7 +27,8 @@ class todoList extends Component {
     if (this.state.currentValue !== "") {
       const newItem = {
         text: this.state.currentValue,
-        key: Date.now()
+        key: Date.now(),
+        editing: false
       };
 
       this.setState(prevState => {
@@ -52,6 +54,26 @@ class todoList extends Component {
     });
   }
 
+  editItem(value, key) {
+    const updatedItems = this.state.items.map(item => {
+      if (item.key === key) {
+        return {
+          text: value,
+          key: Date.now(),
+          editing: true
+        };
+      } else {
+        return item;
+      }
+    });
+
+    this.setState(() => {
+      return {
+        items: updatedItems
+      };
+    });
+  }
+
   render() {
     return (
       <div className="todoListMain">
@@ -67,7 +89,11 @@ class todoList extends Component {
             </button>
           </form>
         </div>
-        <TodoItems entries={this.state.items} delete={this.deleteItem} />
+        <TodoItems
+          entries={this.state.items}
+          delete={this.deleteItem}
+          edit={this.editItem}
+        />
       </div>
     );
   }

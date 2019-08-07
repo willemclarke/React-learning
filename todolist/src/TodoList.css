@@ -42,3 +42,7 @@
 ul.theList {
   padding: 0;
 }
+
+.Edit {
+  float: right;
+}
