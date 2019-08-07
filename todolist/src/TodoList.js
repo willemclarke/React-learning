@@ -17,7 +17,7 @@ class todoList extends Component {
 
   onChange(event) {
     this.setState({
-      /*event.target.value --> event is a type*/
+      /*event is a type - reasons for color all being blue - js doesnt recognise types*/
       currentValue: event.target.value
     });
   }
