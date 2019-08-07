@@ -12,6 +12,7 @@ class todoList extends Component {
 
     this.addItem = this.addItem.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
   }
 
   onChange(event) {
@@ -41,6 +42,16 @@ class todoList extends Component {
     e.preventDefault();
   }
 
+  deleteItem(key) {
+    const filteredItems = this.state.items.filter(item => {
+      return item.key !== key;
+    });
+
+    this.setState({
+      items: filteredItems
+    });
+  }
+
   render() {
     return (
       <div className="todoListMain">
@@ -56,7 +67,7 @@ class todoList extends Component {
             </button>
           </form>
         </div>
-        <TodoItems entries={this.state.items} />
+        <TodoItems entries={this.state.items} delete={this.deleteItem} />
       </div>
     );
   }
