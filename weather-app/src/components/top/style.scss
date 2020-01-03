@@ -10,6 +10,7 @@
   .title {
     color: #fff;
     font-size: 20px;
+    margin-top: 6px;
   }
 }
 
@@ -33,7 +34,7 @@
 
     .current-weather {
       height: fit-content;
-      font-size: 26px;
+      font-size: 31px;
     }
 
     .image {
@@ -51,4 +52,12 @@
     justify-content: center;
     font-size: 13px;
   }
+}
+
+.btn-select-location {
+  background-color: #49dcc2;
+  font-size: 9px;
+  font-family: Roboto, sans-serif;
+  border-radius: 2px;
+  color: #222;
 }
