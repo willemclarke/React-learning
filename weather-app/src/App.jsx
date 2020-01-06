@@ -9,24 +9,31 @@ import BottomSection from "./components/bottom/index";
 
 import axios from "axios";
 
-const WEATHER_KEY = "f4406833aa13ba04e0ea552ad5454c6b";
+const WEATHER_KEY = "b5872ed0b424ff4407a9675d2502f7ec";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cityName: "London",
-      forecastDays: 5
+      cityName: "Toowoomba",
+      isLoading: true
     };
   }
 
   componentDidMount() {
-    const { cityName, forecastDays } = this.state;
-    const URL = `http://api.weatherstack.com/forecast?access_key=${WEATHER_KEY} &query=${cityName} &forecast_days=${forecastDays}`;
+    const { cityName } = this.state;
+
+    const URL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=metric&APPID=${WEATHER_KEY}`;
     axios
       .get(URL)
       .then(res => {
-        console.log(res);
+        const city = res.data.city;
+        const data = res.data.list.filter((value, index, Arr) => {
+          return index % 8 == 0;
+        });
+        console.log(city);
+        console.log(data);
+        return data, city;
       })
       .catch(err => {
         if (err) {
