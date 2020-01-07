@@ -7,5 +7,5 @@
   thus weather icon images the images are different:
 
 <p float="left">
-  <img src="https://i.gyazo.com/0fd8964712c2184a15f437299355b799.png" width="504" />
+  <img src="https://i.gyazo.com/0fd8964712c2184a15f437299355b799.png"/>
 </p>
