@@ -20,35 +20,63 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
+  updateWeather() {
     const { cityName } = this.state;
 
     const URL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=metric&APPID=${WEATHER_KEY}`;
     axios
       .get(URL)
       .then(res => {
-        const city = res.data.city;
+        // Api returns 40 arrays per request, thus trim to 5 arrays for each day
         const data = res.data.list.filter((value, index, Arr) => {
-          return index % 8 == 0;
+          return index % 8 === 0;
         });
-        console.log(city);
-        console.log(data);
-        return data, city;
+        return data;
+      })
+      .then(data => {
+        const text = data[0].weather[0].description;
+        const textCapitalised = text.charAt(0).toUpperCase() + text.slice(1);
+        this.setState({
+          isLoading: false,
+          mainTemp: data[0].main.temp,
+          text: textCapitalised,
+          iconURL: `http://openweathermap.org/img/wn/${data[0].weather[0].icon}@2x.png`
+        });
       })
       .catch(err => {
         if (err) {
-          console.error("Failed to recieve API data ", err);
+          console.error("Cannot fetch Weather Data from API ", err);
         }
       });
   }
 
+  componentDidMount() {
+    const { eventEmitter } = this.props;
+
+    this.updateWeather();
+
+    eventEmitter.on("updateWeather", data => {
+      this.setState({ cityName: data }, () => this.updateWeather());
+    });
+  }
+
   render() {
+    const { isLoading, cityName, mainTemp, text, iconURL } = this.state;
     return (
       <div className="app-container">
         <div className="main-container">
-          <div className="top-section">
-            <TopSection />
-          </div>
+          {isLoading && <h3>Loading Weather...</h3>}
+          {!isLoading && (
+            <div className="top-section">
+              <TopSection
+                location={cityName}
+                mainTemp={mainTemp}
+                text={text}
+                iconURL={iconURL}
+                eventEmitter={this.props.eventEmitter}
+              />
+            </div>
+          )}
           <div className="bottom-section">
             <BottomSection />
           </div>
