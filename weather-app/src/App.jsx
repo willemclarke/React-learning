@@ -36,11 +36,18 @@ class App extends Component {
       .then(data => {
         const text = data[0].weather[0].description;
         const textCapitalised = text.charAt(0).toUpperCase() + text.slice(1);
+        const temps = data.map(item => {
+          return {
+            text: item.weather[0].description,
+            temp: item.main.temp,
+            icon: `http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`
+          };
+        });
+        console.log(temps);
+
         this.setState({
           isLoading: false,
-          mainTemp: data[0].main.temp,
-          text: textCapitalised,
-          iconURL: `http://openweathermap.org/img/wn/${data[0].weather[0].icon}@2x.png`
+          temps: temps
         });
       })
       .catch(err => {
@@ -60,26 +67,41 @@ class App extends Component {
     });
   }
 
+  renderTopSection() {
+    const { isLoading, temps, cityName } = this.state;
+    if (isLoading) {
+      return null;
+    } else {
+      const { text, temp, icon } = temps[0];
+      return (
+        <TopSection
+          location={cityName}
+          mainTemp={temp}
+          text={text}
+          iconURL={icon}
+          eventEmitter={this.props.eventEmitter}
+        />
+      );
+    }
+  }
+
+  renderBottomSection() {
+    const { isLoading, temps } = this.state;
+    if (isLoading) {
+      return null;
+    } else {
+      return <BottomSection temps={temps} />;
+    }
+  }
+
   render() {
-    const { isLoading, cityName, mainTemp, text, iconURL } = this.state;
+    const { isLoading } = this.state;
     return (
       <div className="app-container">
         <div className="main-container">
           {isLoading && <h3>Loading Weather...</h3>}
-          {!isLoading && (
-            <div className="top-section">
-              <TopSection
-                location={cityName}
-                mainTemp={mainTemp}
-                text={text}
-                iconURL={iconURL}
-                eventEmitter={this.props.eventEmitter}
-              />
-            </div>
-          )}
-          <div className="bottom-section">
-            <BottomSection />
-          </div>
+          {!isLoading && <div className="top-section">{this.renderTopSection()}</div>}
+          <div className="bottom-section">{this.renderBottomSection()}</div>
         </div>
       </div>
     );

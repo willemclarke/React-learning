@@ -2,13 +2,22 @@ import React from "react";
 
 import "./style.scss";
 
-export default class BottomSection extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const renderDay = ({ temp, icon, text }) => {
+  return (
+    <div className="forcastday-container">
+      <div className="image">
+        <img src={icon} />
+      </div>
+      <div className="text">{temp}</div>
+      <div className="muted-text">{text}</div>
+    </div>
+  );
+};
 
-  render() {
-    return <div className="bottom-container"></div>;
-  }
-}
+export default props => {
+  const { temps } = props;
+  const days = temps.map(temp => {
+    return renderDay(temp);
+  });
+  return <div className="bottom-container">{days}</div>;
+};
